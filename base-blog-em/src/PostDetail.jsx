@@ -1,9 +1,27 @@
+import { useQuery } from "react-query";
 import { fetchComments } from "./api";
+
 import "./PostDetail.css";
 
 export function PostDetail({ post }) {
-  // replace with useQuery
-  const data = [];
+  console.log(post.id)
+  const { data, isLoading, isError, error } = useQuery(
+    ["comments", post.id], 
+    () => fetchComments(post.id)
+    )
+
+  if (isLoading) {
+    return <h3>Loading!</h3>
+  }
+
+  if (isError) {
+    return (
+      <>
+        <h3>Error</h3>
+        <p>{error.toString()}</p>
+      </>
+    )
+  }
 
   return (
     <>
