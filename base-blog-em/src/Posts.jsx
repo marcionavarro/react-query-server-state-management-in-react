@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useQuery } from "react-query";
 
 import { fetchPosts, deletePost, updatePost } from "./api";
 import { PostDetail } from "./PostDetail";
@@ -9,7 +10,16 @@ export function Posts() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   // replace with useQuery
-  const data = [];
+  const { data, isError, error, isLoading } = useQuery("posts", fetchPosts, {
+    staleTime: 2000
+  });
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError) {
+    return <>
+      <h3>Oops, something went wrong</h3>
+      <p>{error.toString()}</p>
+    </>
+  }
 
   return (
     <>
@@ -25,11 +35,11 @@ export function Posts() {
         ))}
       </ul>
       <div className="pages">
-        <button disabled onClick={() => {}}>
+        <button disabled onClick={() => { }}>
           Previous page
         </button>
         <span>Page {currentPage + 1}</span>
-        <button disabled onClick={() => {}}>
+        <button disabled onClick={() => { }}>
           Next page
         </button>
       </div>
