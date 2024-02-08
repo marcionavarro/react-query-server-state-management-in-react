@@ -82,3 +82,19 @@
     - **hasMore={hasNextPage}**
 * Component takes care of detecting when to load more
 * Data in **data.pages[x].results**
+
+### Bi-directional Scrolling
+
+* Bi-directional is useful when staring in tht middle
+* All **next** methods and properties have equivalent for **previous**
+
+### Ininite Scroll Summary
+
+* React Qeury manages
+    - **pageParam** for next page to be fetched
+        - **getNextPageParam option
+        - could be from **lastPage** or, **AllPages**
+    - **hasNextPage**
+        - boolean indicating whether **pageParam** is undefined
+* Component handles caliing **fetchNextPage
+    -use **hasNextPage** value to deremine when to stop
