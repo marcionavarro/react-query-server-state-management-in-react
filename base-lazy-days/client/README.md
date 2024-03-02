@@ -74,3 +74,42 @@
     - or in **defaultOptions** when creating QueryClient
 * Set to true to propagate errors to the nearest error boundary
 
+### Options for pre-populating data
+
+|  | where to use ? | data from ? | added to cache?
+|--- |--- |--- |--- |
+| **prefetchQuery** | method to **queryClient** | server | yes |
+| **setQueryData** | method to **queryClient** | client | yes |
+| **placeholderData** | option to **useQuery** | client | no |
+| **initialData** | option to **useQuery** | client | yes |
+
+### Prefetch Treatments
+
+* Saw prefetch with pagination
+    - prefetch next page
+* different trigger: prefetch treatments on home page load
+    - user research: 85% of home page loads are followed by treatments tab loads
+    - Treatments don't change often, so cached data ins't really a problem
+* garbage collected if no **useQuery** iis called after **cacheTime**
+    - if typically not loaded by default **cacheTime**  (5 minutes), specify longer cacheTime
+* **prefetchQuery** is a method on the **queryClient**
+    - adding to the client cache
+* **useQueryClient** returns **queryClient** (whithin Provider)
+* Make a **usePrefetchTreatments** hook within **useTreatments.ts**
+    - uses the same query function and key as the **useTreatments** call
+    - call **usePrefetchTreatments from Home component
+
+### Why doens't new data load?
+
+* using the **same key** for every query
+* after clicking arrow to load new month
+    - data is stale (**staleTiem = 0**), but...
+    - nothing to trigger refetch
+        - component remount
+        - window refocus
+        - running refetch function manually
+        - automated refetch
+* Only fetch new data for **known key** for the above reansons
+* Solution? New key for each month
+    - treat keys as dependency arrays!
+
