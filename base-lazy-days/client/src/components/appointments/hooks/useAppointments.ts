@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 
 import { AppointmentDateMap } from "../types";
@@ -9,6 +9,7 @@ import { getMonthYearDetails, getNewMonthYear } from "./monthYear";
 import { useLoginData } from "@/auth/AuthContext";
 import { axiosInstance } from "@/axiosInstance";
 import { queryKeys } from "@/react-query/constants";
+import { useUser } from "@/components/user/hooks/useUser";
 
 
 // for useQuery call
@@ -50,7 +51,9 @@ export function useAppointments() {
   // We will need imported function getAvailableAppointments here
   // We need the user to pass to getAvailableAppointments so we can show
   //   appointments that the logged-in user has reserved (in white)
-  const { userId } = useLoginData();
+  const { user } = useUser();
+
+  const selectFn = useCallback((data) => getAvailableAppointments(data, user), [user])
 
   /** ****************** END 2: filter appointments  ******************** */
   /** ****************** START 3: useQuery  ***************************** */
@@ -65,7 +68,7 @@ export function useAppointments() {
       [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
       () => getAppointments(nextMonthYear.year, nextMonthYear.month),
     );
-  },[queryClient, monthYear])
+  }, [queryClient, monthYear])
 
   // TODO: update with useQuery!
   // Notes:
@@ -76,7 +79,11 @@ export function useAppointments() {
   //       monthYear.month
   const fallback = {};
   const { data: appointments = fallback } = useQuery([queryKeys.appointments, monthYear.year, monthYear.month],
-    () => getAppointments(monthYear.year, monthYear.month))
+    () => getAppointments(monthYear.year, monthYear.month),
+    {
+      select: showAll ? undefined : selectFn,
+    }
+  )
 
   /** ****************** END 3: useQuery  ******************************* */
 
