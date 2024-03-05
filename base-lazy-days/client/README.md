@@ -113,3 +113,13 @@
 * Solution? New key for each month
     - treat keys as dependency arrays!
 
+### Summary
+* Pre-populating data options:
+    - pre-fetch, setQueryData, placeholderData, initialData
+* Pre-fetch to pre-populate cache
+    - on compoent render
+    - on page (month/year) update
+    - **keepPreviousData** only useful if background doens't change
+* Treat keys as dependency arrays
+
+

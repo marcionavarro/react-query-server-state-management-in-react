@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
-import { useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 
 import { AppointmentDateMap } from "../types";
 import { getAvailableAppointments } from "../utils";
@@ -55,6 +55,17 @@ export function useAppointments() {
   /** ****************** END 2: filter appointments  ******************** */
   /** ****************** START 3: useQuery  ***************************** */
   // useQuery call for appointments for the current monthYear
+
+  // prefetch next month when montYear changes
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    // assume increment of one month
+    const nextMonthYear = getNewMonthYear(monthYear, 1);
+    queryClient.prefetchQuery(
+      [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
+      () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+    );
+  },[queryClient, monthYear])
 
   // TODO: update with useQuery!
   // Notes:
