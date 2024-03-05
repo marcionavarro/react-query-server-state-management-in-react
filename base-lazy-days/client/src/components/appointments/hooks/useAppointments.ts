@@ -11,6 +11,12 @@ import { axiosInstance } from "@/axiosInstance";
 import { queryKeys } from "@/react-query/constants";
 import { useUser } from "@/components/user/hooks/useUser";
 
+// common option for both useQuery and prefetchQuery
+const commonOptions = {
+  staleTime: 0,
+  cacheTime: 300000, // 5 minutes 
+}
+
 
 // for useQuery call
 async function getAppointments(
@@ -67,6 +73,7 @@ export function useAppointments() {
     queryClient.prefetchQuery(
       [queryKeys.appointments, nextMonthYear.year, nextMonthYear.month],
       () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+      commonOptions,
     );
   }, [queryClient, monthYear])
 
@@ -82,7 +89,12 @@ export function useAppointments() {
     () => getAppointments(monthYear.year, monthYear.month),
     {
       select: showAll ? undefined : selectFn,
+      ...commonOptions,
+      refetchOnMount: true,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true
     }
+
   )
 
   /** ****************** END 3: useQuery  ******************************* */

@@ -154,4 +154,19 @@
 * Or, imperatively: **refetch** function in **useQuery** return object
 * reference: [http://react-query.tanstack.com/guides/important-defaults](http://react-query.tanstack.com/guides/important-defaults)
 
+### Update Global Settings
+
+* Global default options vs individual query options
+* Here, want settings for everything but appointments
+    - User profile and user appointments invalidated after mutations
+    - Appointments get special settings (including auto-refetching on interval)
+* Global options in src/react-query/queryClient.ts
+
+### Summary
+
+* **select** option for filtering
+    - stable function to take advantage of caching
+* Suppressing re-fetch with options
+* Polling / re-fetching at intervals
+
 
